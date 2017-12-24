@@ -1,0 +1,191 @@
+<?php
+	session_start();
+?>
+
+<!DOCTYPE html>
+<html><head>
+	<meta content='width=device-width, height=device-height, initial-scale=1' name='viewport'>
+	<link rel="stylesheet" type="text/css" media="screen and (max-width: 879px)" href="mobilehome.css">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 880px)" href="desktophome.css">
+	<title>Accel Parts Department</title>
+</head>
+<body>
+	<div id="container">
+			<div id="nav">
+				<div id="navwrap">
+					<div id="backwrap">
+						<a href="res/uploads/forms/Part-Request-Form.xlsm"><span class="menu">Part-Request</span></a>
+					</div>
+					<div id="imgwrap">
+						<a href="index.html"><img class="imglogo" src="res/htmlcontent/partsdept.png"></a>
+					</div>
+					<div id="uploadhide" style = <?php if(isset($_SESSION['adminmode'])){ 
+												if($_SESSION['adminmode']==true){ 
+													echo "display:inline-block";
+												}else{
+													echo "display:none";
+												}
+											}else{ 
+												echo "display:none";
+											} 
+										?>>
+							<a href="adminupload.html"><span class="menu">Upload</span></a>
+					</div>
+					<div id="imgwraphide">
+							<a href= <?php if(isset($_SESSION['adminmode'])){ 
+												if($_SESSION['adminmode']==true){ 
+													echo "res/functions/logoff.php";
+												}else{
+													echo "login.html";
+												}
+											}else{ 
+												echo "login.html";
+											} 
+										?>><span class="menu"><?php if(isset($_SESSION['adminmode'])){ 
+																		if($_SESSION['adminmode']==true){ 
+																			echo "Logout"; 
+																		}else{
+																			echo "Admin Login";
+																		}
+																	}else{
+																		echo "Admin Login";
+																	}
+																?></span></a>
+					</div>
+				</div>
+			</div>
+		<div id="content">
+			<div id="tablewrapper">
+				<table id="table4" class="tclass">
+					<tr class="trow">
+						<td>
+							<div class="itembox">
+								<a href = "bally.html">
+									<img class="imgicon" src="res/htmlcontent/ballybox.png">
+								</a href>
+							</div>
+						</td>
+						<td>
+							<div class="itembox">
+								<a href = "igt.html">
+									<img class="imgicon" src="res/htmlcontent/igtbox.png">
+								</a href>
+							</div>
+						</td>
+						<td>
+							<div class="itembox">
+								<a href = "spielo.html">
+									<img class="imgicon" src="res/htmlcontent/spielobox.png">
+								</a href>
+							</div>
+						</td>
+						<td>
+							<div class="itembox">
+								<a href = "nrt.html">
+									<img class="imgicon" src="res/htmlcontent/nrtbox.png">
+								</a href>
+							</div>
+						</td>
+					</tr>
+					<tr class="trow">
+						<td>
+							<div class = "itembox">
+								<a href = "wms.html">
+									<img class="imgicon" src="res/htmlcontent/wmsbox.png">
+								</a href>
+							</div>
+						</td>
+						<td>
+							<div class="itembox">
+								<a href = "general.html">
+									<img class="imgicon" src="res/htmlcontent/generalbox.png">
+								</a href>
+							</div>
+						</td>
+						<td>
+							<div class="itembox">
+								<a href = "other.html">
+									<img class="imgicon" src="res/htmlcontent/otherbox.png">
+								</a href>
+							</div>
+						</td>
+						<td>
+							<div class="itembox">
+								<a href = "marketing.html">
+									<img class="imgicon" src="res/htmlcontent/marketingbox.png">
+								</a href>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<table id="table2" class="tclass">
+					<tr class="trow">
+						<td>
+							<div class="itembox">
+								<a href = "bally.html">
+									<img class="imgicon" src="res/htmlcontent/ballybox.png">
+								</a href>
+							</div>
+						</td>
+						<td>
+							<div class="itembox">
+								<a href = "igt.html">
+									<img class="imgicon" src="res/htmlcontent/igtbox.png">
+								</a href>
+							</div>
+						</td>
+					</tr>
+					<tr class="trow">
+						<td>
+							<div class="itembox">
+								<a href = "spielo.html">
+									<img class="imgicon" src="res/htmlcontent/spielobox.png">
+								</a href>
+							</div>
+						</td>
+						<td>
+							<div class="itembox">
+								<a href = "nrt.html">
+									<img class="imgicon" src="res/htmlcontent/nrtbox.png">
+								</a href>
+							</div>
+						</td>
+					</tr>
+					<tr class="trow">
+						<td>
+							<div class = "itembox">
+								<a href = "wms.html">
+									<img class="imgicon" src="res/htmlcontent/wmsbox.png">
+								</a href>
+							</div>
+						</td>
+						<td>
+							<div class="itembox">
+								<a href = "general.html">
+									<img class="imgicon" src="res/htmlcontent/generalbox.png">
+								</a href>
+							</div>
+						</td>
+					</tr>
+					<tr class="trow">
+						<td>
+							<div class="itembox">
+								<a href = "other.html">
+									<img class="imgicon" src="res/htmlcontent/otherbox.png">
+								</a href>
+							</div>
+						</td>
+						<td>
+							<div class="itembox">
+								<a href = "marketing.html">
+									<img class="imgicon" src="res/htmlcontent/marketingbox.png">
+								</a href>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

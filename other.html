@@ -1,0 +1,197 @@
+<?php
+	session_start();
+	$servername = "localhost";
+	$username = "root";
+	$password = "accelmkgt123";
+	$dbname = "accelparts";
+	
+	try{
+		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
+		$getcategory = $conn->prepare("select categoryid from categories where categoryname= :categoryname");			
+		$getcategory ->execute(array(":categoryname" => "Other"));
+		$result = $getcategory->fetch(PDO::FETCH_ASSOC);
+		$categoryidresult = $result['categoryid'];
+		$getimages = $conn->prepare("select * from parts where categoryid= :categoryid");
+		$getimages->execute(array(":categoryid" => "$categoryidresult"));
+		$allimages = $getimages->fetchAll(PDO::FETCH_ASSOC);
+		$_SESSION['imagearray']=json_encode($allimages);
+		$conn = null;
+	}catch(PDOException $e){
+		//print error details to screen
+		echo $result . "<br>" . $e->getMessage();
+
+		//close database connection
+		$conn = null;
+	}
+	
+?>
+<!DOCTYPE html>
+<html><head>
+	<meta content='width=device-width, height=device-height, initial-scale=1' name='viewport'>
+	<link rel="stylesheet" type="text/css" media="screen and (max-width: 879px)" href="mobilepage.css">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 880px)" href="desktoppage.css">
+	<title>Accel Parts Department</title>
+	
+	<script>
+		function populateImages(){
+			var imagedata=<?php echo $_SESSION['imagearray'];?>;
+			var imageTable = document.getElementById("gallerytable");
+			if(imagedata){
+				var j=0;
+				var row;
+				var cell;
+				for(var i=0; i<imagedata.length; i++){
+					if(i%3==0){
+						//create new row
+						row = imageTable.insertRow(j);
+						j++;
+					}
+					if(row){
+						cell = row.insertCell(i%3);
+						cell.setAttribute('class', "tdimage");
+						var celldiv = document.createElement("div");
+						celldiv.setAttribute('class', "celldiv");
+						
+						var imgcontainer = document.createElement("div");
+						imgcontainer.setAttribute('class', "imgcontainer");
+						
+						var imglink = document.createElement("a");
+						imglink.setAttribute('href', imagedata[i].imgpath);
+						var imgcell = document.createElement("img");
+						imgcell.setAttribute('class', "imgcell");				
+						imgcell.setAttribute('src', imagedata[i].imgpath)
+						
+						imglink.appendChild(imgcell);
+						imgcontainer.appendChild(imglink);
+						celldiv.appendChild(imgcontainer);
+						
+						var descriptioncell = document.createElement("div");
+						descriptioncell.setAttribute('class', "descriptioncell");
+						descriptioncell.textContent=imagedata[i].description;
+						celldiv.appendChild(descriptioncell);
+						
+						var accelnumbercell = document.createElement("div");
+						accelnumbercell.setAttribute('class', "accelnumbercell");
+						accelnumbercell.textContent=imagedata[i].accelnumber;
+						celldiv.appendChild(accelnumbercell);
+						
+						cell.appendChild(celldiv);
+					}
+				}
+			}
+		}
+		function populateImagesMobile(){
+			var imagedata=<?php echo $_SESSION['imagearray'];?>;
+			var imageTable = document.getElementById("gallerytablemobile");
+			if(imagedata){
+				var j=0;
+				var row;
+				var cell;
+				for(var i=0; i<imagedata.length; i++){
+					if(i%2==0){
+						//create new row
+						row = imageTable.insertRow(j);
+						j++;
+					}
+					if(row){
+						cell = row.insertCell(i%2);
+						cell.setAttribute('class', "tdimage");
+						var celldiv = document.createElement("div");
+						celldiv.setAttribute('class', "celldiv");
+						
+						var imgcontainer = document.createElement("div");
+						imgcontainer.setAttribute('class', "imgcontainer");
+						
+						var imglink = document.createElement("a");
+						imglink.setAttribute('href', imagedata[i].imgpath);
+						var imgcell = document.createElement("img");
+						imgcell.setAttribute('class', "imgcell");				
+						imgcell.setAttribute('src', imagedata[i].imgpath)
+						
+						imglink.appendChild(imgcell);
+						imgcontainer.appendChild(imglink);
+						celldiv.appendChild(imgcontainer);
+						
+						var descriptioncell = document.createElement("div");
+						descriptioncell.setAttribute('class', "descriptioncell");
+						descriptioncell.textContent=imagedata[i].description;
+						celldiv.appendChild(descriptioncell);
+						
+						var accelnumbercell = document.createElement("div");
+						accelnumbercell.setAttribute('class', "accelnumbercell");
+						accelnumbercell.textContent=imagedata[i].accelnumber;
+						celldiv.appendChild(accelnumbercell);
+						
+						cell.appendChild(celldiv);
+					}
+				}
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="container">
+			<div id="nav">
+				<div id="navwrap">
+					<div id="backwrap">
+						<a href="index.html"><span class="menu">Home</span></a>
+					</div>
+					<div id="imgwrap">
+						<a href="index.html"><img class="imglogo" src="res/htmlcontent/partsdept.png"></a>
+					</div>
+					<div id="uploadhide" style = <?php if(isset($_SESSION['adminmode'])){ 
+												if($_SESSION['adminmode']==true){ 
+													echo "display:inline-block";
+												}else{
+													echo "display:none";
+												}
+											}else{ 
+												echo "display:none";
+											} 
+										?>>
+							<a href="adminupload.html"><span class="menu">Upload</span></a>
+					</div>
+					<div id="imgwraphide">
+							<a href= <?php if(isset($_SESSION['adminmode'])){ 
+												if($_SESSION['adminmode']==true){ 
+													echo "res/functions/logoff.php";
+												}else{
+													echo "login.html";
+												}
+											}else{ 
+												echo "login.html";
+											} 
+										?>><span class="menu"><?php if(isset($_SESSION['adminmode'])){ 
+																		if($_SESSION['adminmode']==true){ 
+																			echo "Logout"; 
+																		}else{
+																			echo "Admin Login";
+																		}
+																	}else{
+																		echo "Admin Login";
+																	}
+																?></span></a>
+					</div>
+				</div>
+			</div>
+		<div id="content">
+			<div id="pagetitle">Other
+			</div>
+			<div id="gallerywrap">
+				<table id="gallerytable">
+				</table>
+				<table id="gallerytablemobile">
+				</table>
+				<script>
+					populateImages();
+				</script>
+				<script>
+					populateImagesMobile();
+				</script>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

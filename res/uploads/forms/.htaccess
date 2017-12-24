@@ -1,0 +1,7 @@
+ForceType application/octet-stream
+<Files Part-Request-Form.xlsm>
+AuthUserFile /var/www/html/.htpasswd
+AuthName "Protected File"
+AuthType Basic
+Require valid-user
+</Files>

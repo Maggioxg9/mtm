@@ -1,0 +1,143 @@
+<?php
+	session_start();
+	if(isset($_SESSION['adminmode']) && $_SESSION['adminmode']==true){
+		//user logged in proceed
+	}else{
+		//not logged in, redirect to login
+		header("Location: login.html");
+		exit();
+	}
+	if(isset($_SESSION['selected'])){
+		$selected = $_SESSION['selected'];
+	}
+	
+	$servername = "localhost";
+	$username = "root";
+	$password = "accelmkgt123";
+	$dbname = "accelparts";
+	
+	try{
+		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
+		$getcategories = $conn->prepare("select * from categories");
+		$getcategories->execute();
+		$allcategories = $getcategories->fetchAll(PDO::FETCH_ASSOC);
+		$_SESSION['categoryarray']=json_encode($allcategories);
+		$conn = null;
+	}catch(PDOException $e){
+		//print error details to screen
+		echo $result . "<br>" . $e->getMessage();
+
+		//close database connection
+		$conn = null;
+	}
+	
+?>
+
+<!DOCTYPE html>
+<html><head>
+	<meta content='width=device-width, height=device-height, initial-scale=1' name='viewport'>
+	<link rel="stylesheet" type="text/css" media="screen and (max-width: 879px)" href="mobilepage.css">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 880px)" href="desktoppage.css">
+	<title>Accel Parts Department</title>
+</head>
+<body>
+	<div id="container">
+			<div id="nav">
+				<div id="navwrap">
+					<div id="backwrap">
+						<a href="index.html"><span class="menu">Home</span></a>
+					</div>
+					<div id="imgwrap">
+						<a href="index.html"><img class="imglogo" src="res/htmlcontent/partsdept.png"></a>
+					</div>
+					<div id="uploadhide" style = <?php if(isset($_SESSION['adminmode'])){ 
+												if($_SESSION['adminmode']==true){ 
+													echo "display:inline-block";
+												}else{
+													echo "display:none";
+												}
+											}else{ 
+												echo "display:none";
+											} 
+										?>>
+							<a href="adminupload.html"><span class="menu">Upload</span></a>
+					</div>
+					<div id="imgwraphide">
+							<a href= <?php if(isset($_SESSION['adminmode'])){ 
+												if($_SESSION['adminmode']==true){ 
+													echo "res/functions/logoff.php";
+												}else{
+													echo "login.html";
+												}
+											}else{ 
+												echo "login.html";
+											} 
+										?>><span class="menu"><?php if(isset($_SESSION['adminmode'])){ 
+																		if($_SESSION['adminmode']==true){ 
+																			echo "Logout"; 
+																		}else{
+																			echo "Admin Login";
+																		}
+																	}else{
+																		echo "Admin Login";
+																	}
+																?></span></a>
+					</div>
+				</div>
+			</div>
+		<div id="content">
+			<div id="loginwrapper">
+				<div class="uploadbox">
+					<div class="uploaddetails">
+						<?php if(isset($_SESSION['uploadsuccess'])){
+								if($_SESSION['uploadsuccess']==true){
+									echo '<script language="javascript">';
+									echo 'alert("Upload Success")';
+									echo '</script>';
+								}else{
+									echo '<script language="javascript">';
+									echo 'alert("Upload Failed, please try again or contact the administrator")';
+									echo '</script>';
+								}
+								unset($_SESSION['uploadsuccess']);
+							}
+						?>
+							<span class="formfont">Select a Category:</span>
+							<select name="categoryname" form="formupload">
+								<option <?php if($selected == 'Form'){echo("selected");}?> value="Form">Form</option>
+								<option <?php if($selected == 'Bally'){echo("selected");}?> value="Bally">Bally</option>
+								<option <?php if($selected == 'General'){echo("selected");}?> value="General">General</option>
+								<option <?php if($selected == 'IGT'){echo("selected");}?> value="IGT">IGT</option>
+								<option <?php if($selected == 'Marketing'){echo("selected");}?> value="Marketing">Marketing</option>
+								<option <?php if($selected == 'NRT'){echo("selected");}?> value="NRT">NRT</option>
+								<option <?php if($selected == 'Other'){echo("selected");}?> value="Other">Other</option>
+								<option <?php if($selected == 'Spielo'){echo("selected");}?> value="Spielo">Spielo</option>
+								<option <?php if($selected == 'WMS'){echo("selected");}?> value="WMS">WMS</option>
+							</select>
+					</div>
+					<form id="formupload" action="res/functions/adminupload.php" method="post" enctype="multipart/form-data">
+						<div class="uploaddetails">
+								<span class="formfont">Description:</span>
+								<input type="text" name="description" size="40" maxlength="50">
+						</div>
+						<div class="uploaddetails">
+								<span class="formfont">Accel #:</span>
+								<input type="text" name="accelnumber" size="35" maxlength="20">
+						</div>
+						<div class="uploaddetails">
+								<span class="formfont">Select image:</span>
+								<input type="file" name="fileToUpload" id="fileToUpload">
+						</div>
+						<div id="uploadbtn">
+							<br>
+							<input type="submit" value="Upload Image" name="submit">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
